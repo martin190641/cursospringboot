@@ -1,4 +1,4 @@
-package pe.todotic.cursospringboot.modelo;
+package pe.todotic.cursospringboot.model;
 
 import lombok.Data;
 
