@@ -26,7 +26,6 @@ public class CursoController {
     @Autowired
     private FileSystemStorageService fileSystemStorageService;
 
-    // http://localhost:8080?nombre=Darwin
     @GetMapping("")
     String index(Model model) {
         List<Curso> cursos = cursoRepository.findAll();

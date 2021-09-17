@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pe.todotic.cursospringboot.model.Curso;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.todotic.cursospringboot.model.Usuario;
 import pe.todotic.cursospringboot.repository.UsuarioRepository;
 
@@ -26,10 +28,17 @@ public class UsuarioController {
         return "usuarios";
     }
 
-    @ResponseBody
-    @PostMapping("/crear")
-    Usuario crear(@RequestBody Usuario usuario){
-        return usuarioRepository.save(usuario);
+    @GetMapping("/registro")
+    String registar(Model model){
+        model.addAttribute("usuario", new Usuario());
+        return "usuario_registrar";
+    }
+
+    @PostMapping("/registro")
+    String crearregistar(@Validated Usuario usuario, BindingResult bindingResult, Model model,
+                         RedirectAttributes redirectAttributes){
+        usuarioRepository.save(usuario);
+        return "redirect:/cursos";
     }
 
     @ResponseBody
