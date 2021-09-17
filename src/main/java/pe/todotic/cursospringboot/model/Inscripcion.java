@@ -1,4 +1,4 @@
-package pe.todotic.cursospringboot.model;
+package pe.todotic.cursospringboot.modelo;
 
 import lombok.Data;
 
@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 @Entity
 public class Inscripcion {
     @Id
-    private Integer idinscripcion;
-    @JoinColumn(name = "idcurso", referencedColumnName = "idcurso")
-    @ManyToOne
-    private Curso curso;
-    @JoinColumn(name = "idusuario")
-    @ManyToOne
-    private Usuario usuario;
-    private LocalDateTime fechaIncripcion;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idinscripcion")
+    private Integer id;
 
-    @PrePersist
-    private void setFechaInscripcion(){
-        this.fechaIncripcion = LocalDateTime.now();
-    }
+    private LocalDateTime fechaInscripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "idcurso", referencedColumnName = "idcurso")
+    private Curso curso;
 }

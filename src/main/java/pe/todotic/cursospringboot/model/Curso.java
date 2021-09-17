@@ -1,8 +1,10 @@
-package pe.todotic.cursospringboot.model;
+package pe.todotic.cursospringboot.modelo;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,21 +14,36 @@ public class Curso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idcurso")
     private Integer id;
+
+    @NotBlank
     private String titulo;
+
+    @Size(max = 500)
     private String descripcion;
+
     private String rutaImagen;
+
+    @NotNull
+    @Min(1)
+    @Max(1000)
     private Float precio;
+
     private LocalDateTime fechaCreacion;
+
     @Column(name = "fecha_act")
-    private LocalDateTime fecaActualizacion;
+    private LocalDateTime fechaActualizacion;
+
+    @Transient
+    private MultipartFile imagen;
+
 
     @PrePersist
-    private void setFechaCreacio(){
-        this.fechaCreacion = LocalDateTime.now();
+    void prePersist() {
+        fechaCreacion = LocalDateTime.now();
     }
 
     @PreUpdate
-    private void setFecaActualizacion(){
-        this.fecaActualizacion = LocalDateTime.now();
+    void preUpdate() {
+        fechaActualizacion = LocalDateTime.now();
     }
 }

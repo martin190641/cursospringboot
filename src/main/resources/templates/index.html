@@ -2,46 +2,159 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Hola mundo!</title>
+    <title>Hola mundo desde Spring Boot!</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.4/dist/fancybox.css">
+
+    <style>
+        .bg-navbar {
+            background-color: #07003c! important;
+        }
+
+    </style>
 </head>
 <body>
 
-<h1>Hola <span th:text="${nombre}"></span>!</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
+                aria-controls="navbarTogglerDemo03" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="/">CursosOnline</a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link"
+                                        aria-current="page" href="/">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/cursos">Cursos</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/cursos">Admnistración</a>
+                </li>
+            </ul>
+            <div>
+                <a class="btn btn-outline-primary" href="/login">
+                    Iniciar sesión
+                </a>
+                <a class="btn btn-primary" href="/registro">
+                    Regístrate
+                </a>
+            </div>
+            <div class="dropdown" th:if="false">
+                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    Darwin
+                </a>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>TITULO</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="curso : ${cursos}">
-        <td th:text="${curso.id}"></td>
-        <td th:text="${curso.titulo}"></td>
-    </tr>
-    </tbody>
-</table>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/mis-cursos">Mis cursos</a></li>
+                    <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
 
-<br>
 
-<h2>Listado de Usuarios</h2>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Email</th>
-        <th>Password</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="usuario : ${usuarios}">
-        <td th:text="${usuario.id}"></td>
-        <td th:text="${usuario.email}"></td>
-        <td th:text="${usuario.password}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="container mt-5">
+
+    <h3>Cursos</h3>
+
+
+    <div th:if="${msgExito ne null}" class="alert alert-success alert-dismissible">
+        [[${msgExito}]]
+        <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="text-end">
+        <a href="/cursos/nuevo" class="btn btn-primary">
+            Nuevo curso
+        </a>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th></th>
+            <th>TITULO</th>
+            <th>PRECIO</th>
+            <th>FECHA CREACION</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="curso : ${cursos}" th:object="${curso}">
+            <td>
+
+                <a th:href="@{/media/{rutaImagen}(rutaImagen=*{rutaImagen})}" data-fancybox>
+
+                    <img th:src="@{/media/{rutaImagen}(rutaImagen=*{rutaImagen})}"
+                         th:if="*{rutaImagen ne null}"
+                         alt=""
+                         width="120"
+                         class="img-thumbnail">
+                </a>
+
+            </td>
+            <td>
+                <div th:text="*{titulo}" class="fw-bold"></div>
+                <p class="small" th:text="*{descripcion}">
+                </p>
+            </td>
+            <td>
+                $[[*{#numbers.formatDecimal(precio, 1, 'COMMA', 2, 'POINT')}]]
+            </td>
+            <td>
+                [[*{#temporals.format(fechaCreacion, 'dd/MM/yyyy hh:mm a')}]]
+            </td>
+            <td class="text-end">
+
+                <div class="btn-group btn-group-sm">
+                    <a th:href="@{/cursos/{id}/editar(id=*{id})}" class="btn btn-primary" title="Editar curso">
+                        <i class="fa fa-edit"></i>
+                    </a>
+
+                    <a onclick="eliminarCurso(this)" href="#" class="btn btn-danger" title="Eliminar curso">
+                        <i class="fa fa-trash"></i>
+                    </a>
+
+                    <form th:action="@{/cursos/{id}/eliminar(id=*{id})}" method="post" class="d-none"></form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.4/dist/fancybox.umd.js"></script>
+
+<script>
+    function eliminarCurso(elem) {
+        var ok = confirm('¿Está seguro de eliminar el curso?');
+
+        if (ok) {
+            elem.nextElementSibling.submit();
+        }
+    }
+
+
+
+
+</script>
 
 </body>
 </html>
