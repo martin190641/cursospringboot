@@ -35,9 +35,18 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro")
-    String crearregistar(@Validated Usuario usuario, BindingResult bindingResult, Model model,
+    String registar(@Validated Usuario usuario, BindingResult bindingResult, Model model,
                          RedirectAttributes redirectAttributes){
+        usuario.setRol(Usuario.Rol.ESTUDIANTE);
+        if (usuario.isPasswordEquals()) {
+            bindingResult.rejectValue("confirmPassword", "", "Las contraseñas no coinciden");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("usuario", usuario);
+            return "usuario_registrar";
+        }
         usuarioRepository.save(usuario);
+        redirectAttributes.addFlashAttribute("msgExito", "Se ha registrado exitosamente.");
         return "redirect:/cursos";
     }
 
@@ -52,10 +61,12 @@ public class UsuarioController {
         usuarioFromBD.setRol(usuario.getRol() );
         return usuarioRepository.save(usuarioFromBD);
     }
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}/eliminar")
-    void eliminar(@PathVariable Integer id){
+
+    @PostMapping("/{id}/eliminar")
+    String eliminar(@PathVariable Integer id, RedirectAttributes ra){
         Usuario usuarioFromBD = usuarioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         usuarioRepository.delete(usuarioFromBD);
+        ra.addFlashAttribute("msgExito", "El usuario ha sido eliminado.");
+        return "redirect:/usuarios";
     }
 }
