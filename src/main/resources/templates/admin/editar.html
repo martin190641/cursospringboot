@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{master.html}">
+    <head>
+        <meta charset="UTF-8">
+        <title>Editar curso</title>
+    </head>
+    <body>
+        <div class="container mt-5" layout:fragment="contenido_dinamico">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6">
+                    <h3>Editar curso</h3>
+                    <div th:insert="admin/_form :: formulario_repetido"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Usuarios</title>
+    <title>CursosOnline</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
@@ -16,10 +20,12 @@
         .bg-navbar {
             background-color: #07003c ! important;
         }
-
     </style>
+
+    <div layout:fragment="styles" th:remove="tag"></div>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-navbar">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button"
@@ -34,11 +40,28 @@
                 <li class="nav-item"><a class="nav-link"
                                         aria-current="page" href="/">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="/cursos">Cursos</a></li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/cursos">Admnistración</a>
-                </li>
+                <div class="collapse navbar-collapse" id="navbarNavDarkDropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Admnistración
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" href="/admin/cursos">Cursos</a></li>
+                                <li><a class="dropdown-item" href="/admin/usuarios">Usuarios</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/miscursos">Mis
+                        Cursos</a></li>
+                </div>
             </ul>
-            <div>
+
+            <div sec:authorize="!isAuthenticated()">
                 <a class="btn btn-outline-primary" href="/login">
                     Iniciar sesión
                 </a>
@@ -46,10 +69,10 @@
                     Regístrate
                 </a>
             </div>
-            <div class="dropdown" th:if="false">
+            <div class="dropdown" sec:authorize="isAuthenticated()">
                 <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    Darwin
+                   data-bs-toggle="dropdown" aria-expanded="false"
+                   sec:authentication="principal.nombre">
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -61,58 +84,25 @@
     </div>
 </nav>
 
-<div class="container mt-5">
-    <h3>Listado de Usuarios</h3>
-    <div th:if="${msgExito ne null}" class="alert alert-success alert-dismissible">
+<div class="container">
+    <div th:if="${msgExito ne null}" class="alert alert-success alert-dismissible my-3">
         [[${msgExito}]]
         <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
     </div>
+</div>
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>NOMBRE COMPLETO</th>
-            <th>EMAIL</th>
-            <th>ROL</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="usuario : ${usuarios}">
-            <td th:text="${usuario.getId()}"></td>
-            <td th:text="${usuario.getNombreCompleto()}"></td>
-            <td th:text="${usuario.getEmail()}"></td>
-            <td th:text="${usuario.getRol()}"></td>
-            <td class="text-end">
-
-                <div class="btn-group btn-group-sm">
-                    <a onclick="eliminarUsuario(this)" href="#" class="btn btn-danger" title="Eliminar usuario">
-                        <i class="fa fa-trash"></i>
-                    </a>
-
-                    <form th:action="@{/usuarios/{id}/eliminar(id=${usuario.getId()})}" method="post" class="d-none"></form>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div layout:fragment="contenido_dinamico">
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         crossorigin="anonymous"></script>
 
-<script>
-    function eliminarUsuario(elem) {
-        console.log("hola si")
-        console.log(elem.toString())
-        var ok = confirm('¿Está seguro de eliminar el usuario?');
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.4/dist/fancybox.umd.js"></script>
 
-        if (ok) {
-            elem.nextElementSibling.submit();
-        }
-    }
-</script>
+
+<div layout:fragment="scripts" th:remove="tag">
+</div>
+
 </body>
 </html>

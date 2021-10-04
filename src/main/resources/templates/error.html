@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{master.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+
+<div class="container my-5" layout:fragment="contenido_dinamico">
+
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Date</span>
+        </div>
+        <div class="col-md-11">
+            <span th:text="${timestamp}"></span>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Error</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Status</span>
+        </div>
+        <div class="col-md-11">
+            <span th:text="${status}"></span>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Message</span>
+        </div>
+        <div class="col-md-11">
+            <span th:text="${message}"></span>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Exception</span>
+        </div>
+        <div class="col-md-11">
+            <span th:text="${exception}"></span>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-1 text-end">
+            <span class="text-primary fw-bold">Trace</span>
+        </div>
+        <div class="col-md-11">
+            <span th:text="${trace}"></span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

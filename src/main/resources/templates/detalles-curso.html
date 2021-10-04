@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{master.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${curso.titulo}]]</title>
+</head>
+<body>
+<div layout:fragment="contenido_dinamico">
+
+    <div class="container my-5" th:object="${curso}">
+
+        <h3 class="text-primary mb-3">[[*{titulo}]]</h3>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <img th:src="@{/media/{rutaImagen}(rutaImagen=*{rutaImagen})}" class="card-img-top"
+                     th:alt="*{titulo}">
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    [[*{descripcion}]]
+                </p>
+
+                <p>
+                    $[[*{#numbers.formatDecimal(precio, 1,'COMMA',2,'POINT')}]]
+                </p>
+
+                <!--<button class="btn btn-success btn-lg">
+                    Comprar
+                </button>-->
+                <div class="mercado-button-container">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div layout:fragment="scripts">
+
+        <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+        <script>
+            // Agrega credenciales de SDK
+            const mp = new MercadoPago('TEST-2bb8b9f1-3e49-4269-bafb-eab568b11f46', {
+                locale: 'es-ES'
+            });
+
+            // Inicializa el checkout
+            mp.checkout({
+                preference: {
+                    id: '[[${preference.id}]]'
+                },
+                render: {
+                    container: '.mercado-button-container', // Indica el nombre de la clase donde se mostrará el botón de pago
+                    label: 'Pagar curso', // Cambia el texto del botón de pago (opcional)
+                }
+            });
+        </script>
+
+    </div>
+</body>
+</html>

@@ -1,13 +1,16 @@
 package pe.todotic.cursospringboot.model;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Curso {
     @Id
@@ -36,7 +39,6 @@ public class Curso {
     @Transient
     private MultipartFile imagen;
 
-
     @PrePersist
     void prePersist() {
         fechaCreacion = LocalDateTime.now();
@@ -46,4 +48,5 @@ public class Curso {
     void preUpdate() {
         fechaActualizacion = LocalDateTime.now();
     }
+
 }
